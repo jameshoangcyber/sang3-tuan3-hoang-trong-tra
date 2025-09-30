@@ -5,6 +5,7 @@ import 'youtube_player_screen.dart';
 import 'alarm_clock_screen.dart';
 import 'stopwatch_screen.dart';
 import 'voice_control_screen.dart';
+import 'camera_translate_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -123,6 +124,18 @@ class HomeScreen extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (context) => VoiceControlScreen(),
+                    ),
+                  ),
+                ),
+                _buildFeatureCard(
+                  context,
+                  'Camera Dịch Realtime',
+                  Icons.camera_alt,
+                  Colors.green,
+                  () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CameraTranslateScreen(),
                     ),
                   ),
                 ),
