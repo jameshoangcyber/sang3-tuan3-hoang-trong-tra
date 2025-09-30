@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class UnitConverterScreen extends StatefulWidget {
-  const UnitConverterScreen({Key? key}) : super(key: key);
+  const UnitConverterScreen({super.key});
 
   @override
-  _UnitConverterScreenState createState() => _UnitConverterScreenState();
+  UnitConverterScreenState createState() => UnitConverterScreenState();
 }
 
-class _UnitConverterScreenState extends State<UnitConverterScreen> {
+class UnitConverterScreenState extends State<UnitConverterScreen> {
   final TextEditingController _controller = TextEditingController();
   double? _convertedValue;
   bool _isMetersToFeet = true;

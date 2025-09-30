@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
-import 'screens/HomeScreen.dart';
+import 'screens/main_navigation_screen.dart';
+import 'theme/app_theme.dart';
 
 void main() {
   runApp(
     MaterialApp(
       title: 'Ứng dụng đa chức năng',
-      home: HomeScreen(),
+      home: const MainNavigationScreen(),
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.deepOrange,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
+      theme: AppTheme.lightTheme,
     ),
   );
 }

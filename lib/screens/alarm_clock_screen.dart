@@ -4,11 +4,13 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'dart:async';
 
 class AlarmClockScreen extends StatefulWidget {
+  const AlarmClockScreen({super.key});
+
   @override
-  _AlarmClockScreenState createState() => _AlarmClockScreenState();
+  AlarmClockScreenState createState() => AlarmClockScreenState();
 }
 
-class _AlarmClockScreenState extends State<AlarmClockScreen> {
+class AlarmClockScreenState extends State<AlarmClockScreen> {
   final AudioPlayer _audioPlayer = AudioPlayer();
   final FlutterLocalNotificationsPlugin _notifications =
       FlutterLocalNotificationsPlugin();
@@ -125,14 +127,14 @@ class _AlarmClockScreenState extends State<AlarmClockScreen> {
         UrlSource('https://www.soundjay.com/misc/sounds/bell-ringing-05.wav'),
       );
     } catch (e) {
-      print('Không thể phát âm thanh từ URL: $e');
+      debugPrint('Không thể phát âm thanh từ URL: $e');
       // Fallback: sử dụng âm thanh hệ thống
       try {
         // Thử phát âm thanh từ asset
         await _audioPlayer.play(AssetSource('sounds/alarm.mp3'));
       } catch (e2) {
-        print('Không thể phát âm thanh từ asset: $e2');
-        print('Báo thức đã kêu (chỉ có thông báo)');
+        debugPrint('Không thể phát âm thanh từ asset: $e2');
+        debugPrint('Báo thức đã kêu (chỉ có thông báo)');
       }
     }
 
@@ -181,11 +183,11 @@ class _AlarmClockScreenState extends State<AlarmClockScreen> {
                 _stopAlarm();
                 Navigator.of(context).pop();
               },
-              child: Text('Tắt báo thức'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
                 foregroundColor: Colors.white,
               ),
+              child: Text('Tắt báo thức'),
             ),
           ],
         );

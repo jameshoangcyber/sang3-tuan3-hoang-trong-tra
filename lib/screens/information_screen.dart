@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sang3_tuan3_hoang_trong_tra/screens/information_screen.dart';
 import 'temperature_screen.dart';
 import 'unit_converter_screen.dart';
 

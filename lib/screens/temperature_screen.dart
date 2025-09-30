@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
 class TemperatureConverterScreen extends StatefulWidget {
+  const TemperatureConverterScreen({super.key});
+
   @override
-  _TemperatureConverterScreenState createState() =>
-      _TemperatureConverterScreenState();
+  TemperatureConverterScreenState createState() =>
+      TemperatureConverterScreenState();
 }
 
-class _TemperatureConverterScreenState
+class TemperatureConverterScreenState
     extends State<TemperatureConverterScreen> {
   final TextEditingController _controller = TextEditingController();
   double? _convertedTemperature;

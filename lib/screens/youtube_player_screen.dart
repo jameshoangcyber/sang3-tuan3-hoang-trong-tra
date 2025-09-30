@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class YouTubePlayerScreen extends StatefulWidget {
+  const YouTubePlayerScreen({super.key});
+
   @override
-  _YouTubePlayerScreenState createState() => _YouTubePlayerScreenState();
+  YouTubePlayerScreenState createState() => YouTubePlayerScreenState();
 }
 
-class _YouTubePlayerScreenState extends State<YouTubePlayerScreen> {
+class YouTubePlayerScreenState extends State<YouTubePlayerScreen> {
   final TextEditingController _urlController = TextEditingController();
   YoutubePlayerController? _controller;
   bool _isPlayerReady = false;
@@ -129,7 +131,7 @@ class _YouTubePlayerScreenState extends State<YouTubePlayerScreen> {
                       showVideoProgressIndicator: true,
                       progressIndicatorColor: Colors.red,
                       onReady: () {
-                        print('Player is ready.');
+                        debugPrint('Player is ready.');
                       },
                     )
                   : Container(

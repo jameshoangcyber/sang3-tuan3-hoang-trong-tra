@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'dart:async';
 
 class VoiceControlScreen extends StatefulWidget {
+  const VoiceControlScreen({super.key});
+
   @override
-  _VoiceControlScreenState createState() => _VoiceControlScreenState();
+  VoiceControlScreenState createState() => VoiceControlScreenState();
 }
 
-class _VoiceControlScreenState extends State<VoiceControlScreen> {
+class VoiceControlScreenState extends State<VoiceControlScreen> {
   final SpeechToText _speechToText = SpeechToText();
   final FlutterTts _flutterTts = FlutterTts();
 
   bool _speechEnabled = false;
   bool _isListening = false;
   String _recognizedText = '';
-  String _lastCommand = '';
+  String _statusMessage = 'Đang khởi tạo...';
   Timer? _timer;
   int _seconds = 0;
   bool _isTimerRunning = false;
@@ -30,12 +33,49 @@ class _VoiceControlScreenState extends State<VoiceControlScreen> {
   @override
   void dispose() {
     _timer?.cancel();
+    _speechToText.stop();
     super.dispose();
   }
 
   Future<void> _initSpeech() async {
-    _speechEnabled = await _speechToText.initialize();
-    setState(() {});
+    try {
+      // Request microphone permission
+      var status = await Permission.microphone.request();
+      if (status != PermissionStatus.granted) {
+        setState(() {
+          _statusMessage = 'Cần quyền microphone để sử dụng tính năng này';
+        });
+        return;
+      }
+
+      _speechEnabled = await _speechToText.initialize(
+        onError: (errorNotification) {
+          debugPrint('Speech recognition error: \${errorNotification.errorMsg}');
+          if (mounted) {
+            setState(() {
+              _statusMessage = 'Lỗi: \${errorNotification.errorMsg}';
+            });
+          }
+        },
+        onStatus: (status) {
+          debugPrint('Speech recognition status: \$status');
+          if (mounted) {
+            setState(() {
+              _statusMessage = 'Trạng thái: \$status';
+            });
+          }
+        },
+      );
+      
+      setState(() {
+        _statusMessage = _speechEnabled ? 'Sẵn sàng nghe' : 'Không thể khởi tạo nhận diện giọng nói';
+      });
+    } catch (e) {
+      debugPrint('Error initializing speech: \$e');
+      setState(() {
+        _statusMessage = 'Lỗi khởi tạo: \$e';
+      });
+    }
   }
 
   Future<void> _initTts() async {
@@ -50,33 +90,60 @@ class _VoiceControlScreenState extends State<VoiceControlScreen> {
   }
 
   void _startListening() async {
-    if (!_isListening) {
-      await _speechToText.listen(
-        onResult: (result) {
-          setState(() {
-            _recognizedText = result.recognizedWords;
-            _processCommand(_recognizedText);
-          });
-        },
-        listenFor: Duration(seconds: 10),
-        pauseFor: Duration(seconds: 3),
-        partialResults: true,
-        localeId: "vi_VN",
-        onSoundLevelChange: (level) {
-          // Có thể thêm hiệu ứng âm thanh ở đây
-        },
-      );
-      setState(() {
-        _isListening = true;
-      });
+    if (!_isListening && _speechEnabled) {
+      try {
+        setState(() {
+          _statusMessage = 'Đang nghe...';
+        });
+        
+        await _speechToText.listen(
+          onResult: (result) {
+            setState(() {
+              _recognizedText = result.recognizedWords;
+              _statusMessage = 'Đã nhận diện: \${result.recognizedWords}';
+            });
+            if (result.finalResult) {
+              _processCommand(result.recognizedWords);
+            }
+          },
+          listenFor: Duration(seconds: 10),
+          pauseFor: Duration(seconds: 3),
+          listenOptions: SpeechListenOptions(
+            partialResults: true,
+            cancelOnError: true,
+            listenMode: ListenMode.confirmation,
+          ),
+          localeId: "vi_VN",
+          onSoundLevelChange: (level) {
+            // Có thể thêm hiệu ứng âm thanh ở đây
+            debugPrint('Sound level: \$level');
+          },
+        );
+        setState(() {
+          _isListening = true;
+        });
+      } catch (e) {
+        debugPrint('Error starting listening: \$e');
+        setState(() {
+          _statusMessage = 'Lỗi bắt đầu nghe: \$e';
+        });
+      }
     }
   }
 
   void _stopListening() async {
-    await _speechToText.stop();
-    setState(() {
-      _isListening = false;
-    });
+    try {
+      await _speechToText.stop();
+      setState(() {
+        _isListening = false;
+        _statusMessage = 'Đã dừng nghe';
+      });
+    } catch (e) {
+      debugPrint('Error stopping listening: \$e');
+      setState(() {
+        _statusMessage = 'Lỗi dừng nghe: \$e';
+      });
+    }
   }
 
   void _processCommand(String command) {
@@ -98,8 +165,6 @@ class _VoiceControlScreenState extends State<VoiceControlScreen> {
     } else if (lowerCommand.contains('giúp') || lowerCommand.contains('help')) {
       _speak('Bạn có thể nói: bắt đầu, dừng, reset, xem thời gian');
     }
-
-    _lastCommand = command;
   }
 
   void _startTimer() {
@@ -210,12 +275,13 @@ class _VoiceControlScreenState extends State<VoiceControlScreen> {
               child: Column(
                 children: [
                   Text(
-                    _isListening ? 'Đang nghe...' : 'Sẵn sàng nghe',
+                    _statusMessage,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: _isListening ? Colors.red : Colors.grey[600],
                     ),
+                    textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 10),
                   if (_recognizedText.isNotEmpty) ...[
@@ -251,7 +317,7 @@ class _VoiceControlScreenState extends State<VoiceControlScreen> {
                   icon: Icon(Icons.mic),
                   label: Text('Bắt đầu nghe'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
+                    backgroundColor: _speechEnabled ? Colors.green : Colors.grey,
                     foregroundColor: Colors.white,
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                   ),
@@ -268,6 +334,20 @@ class _VoiceControlScreenState extends State<VoiceControlScreen> {
                 ),
               ],
             ),
+
+            const SizedBox(height: 20),
+
+            // Nút khởi tạo lại và test
+            if (!_speechEnabled)
+              ElevatedButton.icon(
+                onPressed: _initSpeech,
+                icon: Icon(Icons.refresh),
+                label: Text('Khởi tạo lại'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                ),
+              ),
 
             const SizedBox(height: 20),
 

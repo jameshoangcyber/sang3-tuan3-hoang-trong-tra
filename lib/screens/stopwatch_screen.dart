@@ -3,11 +3,13 @@ import 'package:audioplayers/audioplayers.dart';
 import 'dart:async';
 
 class StopwatchScreen extends StatefulWidget {
+  const StopwatchScreen({super.key});
+
   @override
-  _StopwatchScreenState createState() => _StopwatchScreenState();
+  StopwatchScreenState createState() => StopwatchScreenState();
 }
 
-class _StopwatchScreenState extends State<StopwatchScreen> {
+class StopwatchScreenState extends State<StopwatchScreen> {
   final AudioPlayer _audioPlayer = AudioPlayer();
 
   Timer? _timer;
@@ -16,7 +18,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
   int _hours = 0;
   bool _isRunning = false;
   bool _isPaused = false;
-  List<String> _laps = [];
+  final List<String> _laps = [];
 
   @override
   void dispose() {
@@ -81,7 +83,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
           UrlSource('https://www.soundjay.com/misc/sounds/bell-ringing-05.wav'),
         );
       } catch (e) {
-        print('Không thể phát âm thanh: $e');
+        debugPrint('Không thể phát âm thanh: $e');
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
