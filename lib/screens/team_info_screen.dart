@@ -33,7 +33,7 @@ class TeamInfoScreenState extends State<TeamInfoScreen>
     {
       'name': 'TRẦN PHAN QUỐC ANH',
       'role': 'Developer',
-      'studentId': '2280603322',
+      'studentId': '2280600124',
       'class': 'Sáng 3 - Tuần 4',
       'description': 'Hỗ trợ phát triển backend và tích hợp API cho ứng dụng.',
       'skills': ['Java', 'Spring Boot', 'MySQL', 'REST API'],
@@ -43,7 +43,7 @@ class TeamInfoScreenState extends State<TeamInfoScreen>
     {
       'name': 'HOÀNG TRỌNG TRÀ',
       'role': 'UI/UX Designer',
-      'studentId': '2280600124',
+      'studentId': '2280603322',
       'class': 'Sáng 3 - Tuần 4',
       'description':
           'Thiết kế giao diện người dùng và trải nghiệm người dùng cho ứng dụng.',
