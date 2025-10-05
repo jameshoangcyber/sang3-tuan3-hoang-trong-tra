@@ -295,7 +295,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
         child: Image.asset(
-          'images/nxnja.jpg',
+          'images/hutech.png',
           width: double.infinity,
           height: 200,
           fit: BoxFit.cover,

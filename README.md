@@ -83,7 +83,7 @@ Mở file `android/app/src/main/AndroidManifest.xml` và đảm bảo có các q
 ```yaml
 flutter:
   assets:
-    - images/nxnja.jpg
+    - images/hutech.png
     - images/avatar.png
     - images/avatar_2.png
     - images/avatar_3.png
