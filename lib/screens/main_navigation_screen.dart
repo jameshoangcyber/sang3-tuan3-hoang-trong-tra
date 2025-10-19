@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'navigation_state_manager.dart';
+import 'feed_screen.dart';
+import 'market_screen.dart';
+import 'login_screen.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({super.key});
@@ -25,6 +29,18 @@ class MainNavigationScreenState extends State<MainNavigationScreen>
       color: Colors.deepOrange,
     ),
     NavigationItem(
+      icon: Icons.article_outlined,
+      activeIcon: Icons.article,
+      label: 'Bảng tin',
+      color: Colors.indigo,
+    ),
+    NavigationItem(
+      icon: Icons.store_outlined,
+      activeIcon: Icons.store,
+      label: 'Thị trường',
+      color: Colors.orange,
+    ),
+    NavigationItem(
       icon: Icons.translate_outlined,
       activeIcon: Icons.translate,
       label: 'Dịch thuật',
@@ -35,12 +51,6 @@ class MainNavigationScreenState extends State<MainNavigationScreen>
       activeIcon: Icons.person,
       label: 'Cá nhân',
       color: Colors.green,
-    ),
-    NavigationItem(
-      icon: Icons.group_outlined,
-      activeIcon: Icons.group,
-      label: 'Nhóm',
-      color: Colors.purple,
     ),
   ];
 
@@ -94,9 +104,34 @@ class MainNavigationScreenState extends State<MainNavigationScreen>
     }
   }
 
+  Future<void> _logout() async {
+    // Xóa token khỏi SharedPreferences
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('jwt_token');
+
+    // Chuyển về màn hình đăng nhập
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const LoginScreen()),
+      (route) => false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Ứng dụng đa chức năng'),
+        backgroundColor: const Color(0xFF1877F2),
+        foregroundColor: Colors.white,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: _logout,
+            tooltip: 'Đăng xuất',
+          ),
+        ],
+      ),
       body: FadeTransition(
         opacity: _fadeAnimation,
         child: GestureDetector(
@@ -106,14 +141,14 @@ class MainNavigationScreenState extends State<MainNavigationScreen>
               _onTabTapped(_currentIndex - 1);
             }
             // Swipe right - previous tab
-            else if (details.primaryVelocity! < 0 && _currentIndex < 3) {
+            else if (details.primaryVelocity! < 0 && _currentIndex < 4) {
               _onTabTapped(_currentIndex + 1);
             }
           },
           child: PageView.builder(
             controller: _pageController,
             onPageChanged: _onPageChanged,
-            itemCount: 4,
+            itemCount: 5,
             itemBuilder: (context, index) {
               return _stateManager.getScreen(index);
             },
@@ -193,19 +228,19 @@ class MainNavigationScreenState extends State<MainNavigationScreen>
           ),
         ),
       ),
-      floatingActionButton: _currentIndex == 0
+      floatingActionButton: _currentIndex == 2
           ? FloatingActionButton(
               onPressed: () {
-                // Có thể thêm action cho FAB ở trang chủ
+                // FAB cho Market screen - thêm sản phẩm
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('Chào mừng đến với ứng dụng đa chức năng!'),
-                    backgroundColor: Colors.deepOrange,
+                    content: Text('Thêm sản phẩm mới vào thị trường!'),
+                    backgroundColor: Colors.orange,
                     duration: Duration(seconds: 2),
                   ),
                 );
               },
-              backgroundColor: Colors.deepOrange,
+              backgroundColor: Colors.orange,
               child: const Icon(Icons.add, color: Colors.white),
             )
           : null,

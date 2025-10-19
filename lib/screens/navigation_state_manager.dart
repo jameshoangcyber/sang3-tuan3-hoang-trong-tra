@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
-import 'personal_screen.dart';
+import 'feed_screen.dart';
+import 'market_screen.dart';
 import 'translate_screen.dart';
-import 'team_info_screen.dart';
+import 'personal_screen.dart';
 
 class NavigationStateManager {
   static final NavigationStateManager _instance =
@@ -29,13 +30,16 @@ class NavigationStateManager {
         _screens[index] = HomeScreen(key: key);
         break;
       case 1:
-        _screens[index] = TranslateScreen(key: key);
+        _screens[index] = FeedScreen(key: key);
         break;
       case 2:
-        _screens[index] = PersonalScreen(key: key);
+        _screens[index] = MarketScreen(key: key);
         break;
       case 3:
-        _screens[index] = TeamInfoScreen(key: key);
+        _screens[index] = TranslateScreen(key: key);
+        break;
+      case 4:
+        _screens[index] = PersonalScreen(key: key);
         break;
       default:
         _screens[index] = HomeScreen(key: key);

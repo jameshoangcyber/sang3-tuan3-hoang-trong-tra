@@ -19,7 +19,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.9.2
+  sdk: '^3.9.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -73,6 +73,21 @@ dependencies:
 
   # State management for real-time updates
   provider: ^6.1.1
+  flutter_dotenv: ^6.0.0
+  shared_preferences: ^2.5.3
+
+  # Facebook packages for enhanced UI
+  flutter_facebook_auth: ^6.0.4
+  
+  # Smart authentication
+  smart_auth: ^1.0.0
+  
+  # Enhanced UI components
+  flutter_staggered_animations: ^1.1.1
+  shimmer: ^3.0.0
+  cached_network_image: ^3.3.1
+  card_swiper: ^3.0.1
+  jwt_decoder: ^2.0.1
 
 dev_dependencies:
   flutter_test:
@@ -104,6 +119,7 @@ flutter:
     - images/avatar_4.png
     - images/avatar_5.png
     - assets/sounds/
+    - assets/.env
     #- images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -131,5 +147,3 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
-
-
